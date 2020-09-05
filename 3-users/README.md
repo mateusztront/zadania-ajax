@@ -10,12 +10,13 @@ Robiąc pętlę po danych z odpowiedzi wygeneruj dla każdego użytkownika eleme
 ```
 <article class="user-cnt" data-id="1">
     <h2 class="user-name">Przykładowy user</h2>
-    <div class="address">
-        Phone: 500 600 600<br>
-        email: <a href="mailto: email@wp.pl">email@wp.pl</a>
+
+    <div class="user-address">
+        Phone: <span class="user-phone">500 600 600</span><br>
+        email: <a href="mailto: email@wp.pl" class="user-email">email@wp.pl</a>
     </div>
 
-    <button type="button" class="btn show-posts">
+    <button type="button" class="btn user-show-posts">
         Show posts
     </button>
 
