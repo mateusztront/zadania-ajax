@@ -110,9 +110,11 @@ body {
     border: 1px solid #ddd;
     border-radius: 5px;
     background: #fff;
+    cursor: pointer;
 }
 .tab-buttons button:disabled {
     opacity: 0.5;
+    cursor: default;
 }
 .tab-cnt.loading-data .tab {
     opacity: 0.5;
