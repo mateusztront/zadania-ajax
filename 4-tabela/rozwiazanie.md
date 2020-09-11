@@ -80,7 +80,7 @@ Po wczytaniu danych powinniśmy je wrzucić do tabeli:
 
     const apiUrl = `http://localhost:3000/users`
     const state = {
-        page : 1 //zaczynamy od 1 strony
+        page : 1, //zaczynamy od 1 strony
         limit : 20
     }
 
@@ -142,18 +142,18 @@ function parseHeaderLinkData(data) {
     const headerLink = data.headers.get("link");
 
     let arrData = headerLink.split("link:")
-    data = arrData.length == 2? arrData[1]: data;
-    let parsed_data = {}
+    arrData = arrData.length == 2? arrData[1]: arrData[0];
 
-    arrData = data.split(",")
+    arrData = arrData.split(",")
     if (arrData.length == 1 && arrData[0] == "") {
         return {}
     }
 
+    let parsedData = {}
     for (let d of arrData){
         const linkInfo = /<([^>]+)>;\s+rel="([^"]+)"/ig.exec(d)
 
-        parsedData[linkInfo[2]]=linkInfo[1]
+        parsedData[linkInfo[2]] = linkInfo[1]
     }
 
     return parsedData;
@@ -253,15 +253,15 @@ for (let el of arrows) {
 ### Obsługa formularza
 Pobieramy formularz i podpinamy mu zdarzenie wysłania.
 
-```
+```js
 const form = document.querySelector("form");
 form.addEventListener("submit", async e => {
     e.preventDefault();
 
-    const data = new FormData(form);
-    for (var key of data.keys()) {
-        const val = data.get(key);
-        if (data !== "") {
+    const formData = new FormData(form);
+    for (var key of formData.keys()) {
+        const val = formData.get(key);
+        if (formData !== "") {
             state.filter[key] = val;
         }
     }
@@ -278,7 +278,7 @@ form.addEventListener("submit", async e => {
 Pobieramy dane z formularza. Następnie ustawiamy je w state.filter.
 Dodajmy tą właściwość do obiektu state i wykorzystajmy ją przy tworzeniu adresu połączenia modyfikując funkcję generateLink:
 
-```
+```js
 const state = {
     limit : 10,
     page : 1,
