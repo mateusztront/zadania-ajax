@@ -31,7 +31,7 @@ Zobaczysz, że zwróconych danych jest bardzo dużo. Żeby otrzymać stronicowan
 (async function() {
     ...
     const apiUrl = `http://localhost:3000/users`
-    const request = await fetch(`${apiUrl}?_page=${page}&_limit=${limit}`);
+    const request = await fetch(`${apiUrl}?_page=${state.page}&_limit=${state.limit}`);
     console.log(request.json())
 })();
 ```
@@ -48,7 +48,7 @@ Potrzebujemy zmiennej, która będzie wskazywać na aktualną stronę i liczbę 
     }
 
     const apiUrl = `http://localhost:3000/users`
-    const request = await fetch(`${apiUrl}?_page=${page}&_limit=${limit}`);
+    const request = await fetch(`${apiUrl}?_page=${state.page}&_limit=${state.limit}`);
     console.log(request.json())
 })();
 ```
@@ -66,7 +66,7 @@ Zmodyfikujmy powyższy kod zamieniając wczytywanie na funkcję:
     }
 
     async function loadData() {
-        const request = await fetch(`${apiUrl}?_page=${page}&_limit=${limit}`);
+        const request = await fetch(`${apiUrl}?_page=${state.page}&_limit=${state.limit}`);
         return request.json();
     }
 })();
@@ -85,7 +85,7 @@ Po wczytaniu danych powinniśmy je wrzucić do tabeli:
     }
 
     async function loadData() {
-        const request = await fetch(`${apiUrl}?_page=${page}&_limit=${limit}`);
+        const request = await fetch(`${apiUrl}?_page=${state.page}&_limit=${state.limit}`);
         return request.json();
     }
 
@@ -180,7 +180,7 @@ function setButtonsState(request) {
 }
 
 async function loadData() {
-    const request = await fetch(`${apiUrl}?_page=${page}&_limit=${limit}`);
+    const request = await fetch(`${apiUrl}?_page=${state.page}&_limit=${state.limit}`);
     setButtonsState(request)
     return request.json();
 }
@@ -194,7 +194,7 @@ W każdej z kolumn znajdują się strzałki służące do sortowania wyników w 
 Aby sortować w odpowiednim kierunku, do adresu zapytania musimy dodać dwa parametry. Parametr _sort oznacza kolumnę po której sortujemy, natomiast _order kierunek sortowania (asd lub desc):
 
 ```js
-`${apiUrl}?_page=${page}&_limit=${limit}&_sort=NAZWA_KOLUMNY&_order=asd
+`${apiUrl}?_page=${state.page}&_limit=${state.limit}&_sort=NAZWA_KOLUMNY&_order=asd
 ```
 
 Aby ułatwić sobię sprawę napiszmy funkcję, która będzie generować dla nas odpowiedni url oraz dodajmy do state dwie dodatkowe zmienne:
