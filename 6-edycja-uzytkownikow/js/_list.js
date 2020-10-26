@@ -3,8 +3,11 @@ import {
     apiLoadData,
     apiUpdateUser,
 } from "./_api";
+import {pubsub} from "./_pubsub";
 
-export function getUserElementHTML({name, surname, email}) {
+const ul = document.querySelector(".users");
+
+function getUserElementHTML({name, surname, email}) {
     return `
         <div className="user-content">
             <p class="user-name">
@@ -37,7 +40,7 @@ export function getUserElementHTML({name, surname, email}) {
     `
 }
 
-export async function loadUserList(ul) {
+async function loadUserList() {
     ul.innerHTML = "";
 
     await apiLoadData().then(res => {
@@ -53,50 +56,77 @@ export async function loadUserList(ul) {
     });
 }
 
-export function bindListEvents() {
-    document.addEventListener("click", e => {
-        if (e.target.classList.contains("btn-delete")) {
-            const li = e.target.closest("li");
-            const id = li.dataset.id;
-            apiDeleteUser(id).then(res => {
-                li.remove();
-            })
-        }
+loadUserList();
 
-        if (e.target.classList.contains("btn-edit")) {
-            const li = e.target.closest("li");
-            const id = li.dataset.id;
+document.addEventListener("click", e => {
+    if (e.target.classList.contains("btn-delete")) {
+        const li = e.target.closest("li");
+        const id = li.dataset.id;
+        apiDeleteUser(id).then(res => {
+            li.remove();
+        })
+    }
 
-            li.querySelector(".btn-save").hidden = false;
-            li.querySelector(".btn-cancel").hidden = false;
-            li.querySelector(".btn-edit").hidden = true;
-            li.querySelector(".btn-delete").hidden = true;
+    if (e.target.classList.contains("btn-edit")) {
+        const li = e.target.closest("li");
+        const id = li.dataset.id;
 
-            const name = li.querySelector("[data-name=name]");
-            const surname = li.querySelector("[data-name=surname]");
-            const email = li.querySelector("[data-name=email]");
+        li.querySelector(".btn-save").hidden = false;
+        li.querySelector(".btn-cancel").hidden = false;
+        li.querySelector(".btn-edit").hidden = true;
+        li.querySelector(".btn-delete").hidden = true;
 
-            [name, surname, email].forEach(el => {
-                const input = document.createElement("input");
-                input.type = "text";
-                input.value = el.innerText;
-                input.name = el.dataset.name;
-                el.parentElement.replaceChild(input, el);
-            })
-        }
+        const name = li.querySelector("[data-name=name]");
+        const surname = li.querySelector("[data-name=surname]");
+        const email = li.querySelector("[data-name=email]");
 
-        if (e.target.classList.contains("btn-cancel")) {
-            const li = e.target.closest("li");
-            const id = li.dataset.id;
+        [name, surname, email].forEach(el => {
+            const input = document.createElement("input");
+            input.type = "text";
+            input.value = el.innerText;
+            input.name = el.dataset.name;
+            el.parentElement.replaceChild(input, el);
+        })
+    }
 
+    if (e.target.classList.contains("btn-cancel")) {
+        const li = e.target.closest("li");
+        const id = li.dataset.id;
+
+        li.querySelector(".btn-save").hidden = true;
+        li.querySelector(".btn-cancel").hidden = true;
+        li.querySelector(".btn-edit").hidden = false;
+        li.querySelector(".btn-delete").hidden = false;
+
+        const elName = li.querySelector("input[name=name]");
+        const elSurname = li.querySelector("input[name=surname]");
+        const elEmail = li.querySelector("input[name=email]");
+
+        [elName, elSurname, elEmail].forEach(el => {
+            const strong = document.createElement("strong");
+            strong.dataset.name = el.name;
+            strong.innerText = el.value;
+            el.parentElement.replaceChild(strong, el);
+        })
+    }
+
+    if (e.target.classList.contains("btn-save")) {
+        const li = e.target.closest("li");
+        const id = li.dataset.id;
+
+        const elName = li.querySelector("input[name=name]");
+        const elSurname = li.querySelector("input[name=surname]");
+        const elEmail = li.querySelector("input[name=email]");
+
+        const name = elName.value;
+        const surname = elSurname.value;
+        const email = elEmail.value;
+
+        apiUpdateUser({id, name, surname, email}).then(res => {
             li.querySelector(".btn-save").hidden = true;
             li.querySelector(".btn-cancel").hidden = true;
             li.querySelector(".btn-edit").hidden = false;
             li.querySelector(".btn-delete").hidden = false;
-
-            const elName = li.querySelector("input[name=name]");
-            const elSurname = li.querySelector("input[name=surname]");
-            const elEmail = li.querySelector("input[name=email]");
 
             [elName, elSurname, elEmail].forEach(el => {
                 const strong = document.createElement("strong");
@@ -104,33 +134,21 @@ export function bindListEvents() {
                 strong.innerText = el.value;
                 el.parentElement.replaceChild(strong, el);
             })
-        }
+        })
+    }
+})
 
-        if (e.target.classList.contains("btn-save")) {
-            const li = e.target.closest("li");
-            const id = li.dataset.id;
-
-            const elName = li.querySelector("input[name=name]");
-            const elSurname = li.querySelector("input[name=surname]");
-            const elEmail = li.querySelector("input[name=email]");
-
-            const name = elName.value;
-            const surname = elSurname.value;
-            const email = elEmail.value;
-
-            apiUpdateUser({id, name, surname, email}).then(res => {
-                li.querySelector(".btn-save").hidden = true;
-                li.querySelector(".btn-cancel").hidden = true;
-                li.querySelector(".btn-edit").hidden = false;
-                li.querySelector(".btn-delete").hidden = false;
-
-                [elName, elSurname, elEmail].forEach(el => {
-                    const strong = document.createElement("strong");
-                    strong.dataset.name = el.name;
-                    strong.innerText = el.value;
-                    el.parentElement.replaceChild(strong, el);
-                })
-            })
-        }
-    })
-}
+pubsub.subscribe("newUser", ({id, name, surname, email}) => {
+    const li = document.createElement("li");
+    li.dataset.id = id;
+    li.innerHTML = getUserElementHTML({
+        name,
+        surname,
+        email
+    });
+    li.classList.add("user-new");
+    ul.prepend(li);
+    setTimeout(() => {
+        li.classList.remove("user-new");
+    }, 1000);
+})
