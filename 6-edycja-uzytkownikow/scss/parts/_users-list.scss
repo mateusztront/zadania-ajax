@@ -1,0 +1,106 @@
+.users {
+    list-style: none;
+    padding: 0;
+    font-family: sans-serif;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 20px;
+}
+.users li {
+    background: #fff;
+    padding: 25px;
+    border-radius: 5px;
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    align-items: start;
+    box-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.1),
+        0 2px 10px rgba(0, 0, 0, 0.035),
+        0 17px 80px rgba(0, 0, 0, 0.07);
+}
+.users li.user-new {
+    box-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.1),
+        0 2px 10px rgba(0, 0, 0, 0.035),
+        0 17px 80px rgba(0, 0, 0, 0.07),
+        inset 0 0 0 3px #60D;
+}
+.users li input {
+    border: 1px solid #aaa;
+    padding: 5px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: inherit;
+}
+.users li p:first-of-type {
+    margin-top: 0;
+}
+.users li p:last-of-type {
+    margin-bottom: 0;
+}
+.users li p {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    margin-bottom: 5px;
+    display: grid;
+    grid-template-columns: subgrid;
+}
+.users li p strong {
+    font-weight: bold;
+    padding: 5px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+}
+.users li .user-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+.users li [class^="btn"] {
+    background: none;
+    border-radius: 3px;
+    cursor: pointer;
+    border: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 80%;
+    width: 30px;
+    height: 30px;
+    text-indent: -9999px;
+    padding: 0;
+    margin-left: 5px;
+    position: relative;
+}
+.users li [class^="btn"]:hover {
+    opacity: 0.8;
+}
+.users li [class^="btn"]:hover::after {
+    opacity: 1;
+}
+.users li [class^="btn"]:hover::before {
+    opacity: 1;
+}
+
+
+.users li .btn-delete {
+    background-image: url(../images/icon-delete.svg);
+    background-color: rgb(110, 110, 110);
+}
+
+.users li .btn-edit {
+    background-image: url(../images/icon-edit.svg);
+    background-color: rgb(81, 150, 255);
+}
+
+.users li .btn-save {
+    background-image: url(../images/icon-edit-save.svg);
+    background-size: 100% 100%;
+    background-color: rgb(5, 233, 24);
+}
+.users li .btn-cancel {
+    background-image: url(../images/icon-edit-cancel.svg);
+    background-size: 100% 100%;
+    background-color: #888;
+}
