@@ -15,7 +15,7 @@ Na koniec dodaj do zdjęć możliwość podglądu dużego rozmiaru za pomocą ta
 
 2. Wyszukując coś w formularzu, ty powinieneś zrobić zapytanie na powyższe API, a następnie wrzucić do galerii zdjęcia. Wygenerowane elementy galerii powinny mieć postać:
     ```html
-    <a href="duże-zdjęcie.jpg" class="gallery-link">
+    <a href="duże-zdjęcie.jpg" class="gallery-element">
         <img src="duże-zdjęcie.jpg" class="gallery-image" alt="tutaj-cokolwiek-ze-zwracanych-danych">
     </a>
     ```
